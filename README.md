@@ -13,8 +13,8 @@ Tested on Ubuntu 24.04 with Nautilus (GNOME Files). Should work also with  Nemo 
 
 ```bash
 # close the repo and move to the folder containing the scripts
-git clone https://github.com/emuskardin/nautilus-raw-preview.git
-cd nautilus-raw-preview
+git clone https://github.com/emuskardin/nautilus-raw-thumbnails.git
+cd nautilus-raw-thumbnails
 
 # install dependencies
 # For Debian/Ubuntu
