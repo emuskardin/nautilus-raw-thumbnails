@@ -1,15 +1,15 @@
 # Nautilus Thumbnailer for RAW Previews 
 
 A lightweight and fast thumbnailer for Nautilus that generates thumbnails for RAW image files using embedded previews extracted with exiv2.
-This thumbnailer should work with most RAW formats that have embedded previews. If specific format is missing, add its
+This thumbnailer should work with most RAW formats that have embedded previews.
 
 Tested on Ubuntu 24.04 with Nautilus (GNOME Files). Should work also with  Nemo and Caja.
 
 <picture style="align: center; padding-bottom: 3mm;">
-  <img width=70% height=70% alt="" src="./photo_preview/thumbnail_preview.png">
+  <img alt="" src="./photo_preview/thumbnail_preview.png">
 </picture>
 
-## Manual Installation
+##  Installation
 
 ```bash
 # close the repo and move to the folder containing the scripts
@@ -20,7 +20,7 @@ cd nautilus-raw-preview
 # For Debian/Ubuntu
 sudo apt install exiv2 imagemagick libimage-exiftool-perl
 # For Fedora
-sudo dnf install exiv2 ImageMagick perl-Image-ExifTool
+# sudo dnf install exiv2 ImageMagick perl-Image-ExifTool
 
 # Move the thumbnailer configuration to the system directory
 sudo cp exiv2raw.thumbnailer /usr/share/thumbnailers/
@@ -32,11 +32,11 @@ sudo chmod +x /usr/local/bin/exiv2-thumbnailer.sh
 # Restart Nautilus to apply the changes:
 nautilus -q
 
-# Optional
+# Optional (force thumbnail generation)
 rm -rf ~/.cache/thumbnails/*
 ```
 
-
+If thumbnails are not generated, check that mime type of your RAW files is contained in exiv2raw.thumbnailer.
 
 ## Troubleshooting
 
@@ -63,3 +63,10 @@ G_MESSAGES_DEBUG=all NAUTILUS_DEBUG=Window nautilus
 exiv2 -pp /path/to/your/file.RAW
 ```
 
+#### Tested Formats
+
+Working
+- .ORF, .ARW, .NEF, .RAF, .CR2, .CR3, DNG
+
+WIP
+- RW2

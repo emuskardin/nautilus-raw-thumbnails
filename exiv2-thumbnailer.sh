@@ -1,24 +1,23 @@
 #!/bin/bash
 INPUT_FILE="$1"
 OUTPUT_FILE="$2"
-
 # Ensure INPUT_FILE is the correct path
 INPUT_FILE=$(realpath "$INPUT_FILE")
 OUTPUT_FILE=$(realpath "$OUTPUT_FILE")
-
 # Extract the embedded thumbnail using exiv2
 exiv2 -ep1 -l . "$INPUT_FILE"
-
 # Derive the base name of the input file (without extension)
 BASENAME=$(basename "$INPUT_FILE" | sed 's/\(.*\)\..*/\1/')
 
+# Look for any preview file regardless of extension
+THUMBNAIL_FILE=$(find . -name "${BASENAME}-preview1.*" | head -n 1)
+
 # Absolute path of the expected preview file
-THUMBNAIL_FILE="$(pwd)/${BASENAME}-preview1.jpg"
+THUMBNAIL_FILE="$(pwd)/${THUMBNAIL_FILE}"
 
 # Debugging: Check if the thumbnail file exists
 echo "Checking if thumbnail file exists: $THUMBNAIL_FILE"
 ls -l "$THUMBNAIL_FILE"
-
 # If a preview file exists, convert it to the output location
 if [ -f "$THUMBNAIL_FILE" ]; then
     echo "Thumbnail found, converting to $OUTPUT_FILE"
