@@ -36,11 +36,11 @@ nautilus -q
 rm -rf ~/.cache/thumbnails/*
 ```
 
+## Troubleshooting
+
 If thumbnails are not generated, check that mime type of your RAW files is contained in exiv2raw.thumbnailer.
 
 If you have already tried this solution (that does not work on Ubuntu 20 and 24) where you [add mime types to gdk-pixbuf-thumbnailer.thumbnailer](https://askubuntu.com/questions/283072/nautilus-isnt-displaying-thumbnails-for-my-nef-files-photo-raw) (second answer), you might want to remove them from there. I am not sure if this will cause issues with order of thumbnailsers. 
-
-## Troubleshooting
 
 If you're having issues with the thumbnailer, try these debugging steps:
 
