@@ -31,14 +31,14 @@ if [ -f "$THUMBNAIL_FILE" ]; then
     if [ -n "$ORIENTATION" ] && [ "$ORIENTATION" -ne 1 ]; then
         # echo "Rotating image (orientation: $ORIENTATION)"
         case "$ORIENTATION" in
-            2) convert "$THUMBNAIL_FILE" -flop "$OUTPUT_FILE" ;;
-            3) convert "$THUMBNAIL_FILE" -rotate 180 "$OUTPUT_FILE" ;;
-            4) convert "$THUMBNAIL_FILE" -flip "$OUTPUT_FILE" ;;
-            5) convert "$THUMBNAIL_FILE" -transpose "$OUTPUT_FILE" ;;
-            6) convert "$THUMBNAIL_FILE" -rotate 90 "$OUTPUT_FILE" ;;
-            7) convert "$THUMBNAIL_FILE" -transverse "$OUTPUT_FILE" ;;
-            8) convert "$THUMBNAIL_FILE" -rotate 270 "$OUTPUT_FILE" ;;
-            *) convert "$THUMBNAIL_FILE" "$OUTPUT_FILE" ;;
+            2) magick "$THUMBNAIL_FILE" -flop "$OUTPUT_FILE" ;;
+            3) magick "$THUMBNAIL_FILE" -rotate 180 "$OUTPUT_FILE" ;;
+            4) magick "$THUMBNAIL_FILE" -flip "$OUTPUT_FILE" ;;
+            5) magick "$THUMBNAIL_FILE" -transpose "$OUTPUT_FILE" ;;
+            6) magick "$THUMBNAIL_FILE" -rotate 90 "$OUTPUT_FILE" ;;
+            7) magick "$THUMBNAIL_FILE" -transverse "$OUTPUT_FILE" ;;
+            8) magick "$THUMBNAIL_FILE" -rotate 270 "$OUTPUT_FILE" ;;
+            *) magick "$THUMBNAIL_FILE" "$OUTPUT_FILE" ;;
         esac
     else
         # No orientation or normal orientation
