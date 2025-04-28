@@ -68,7 +68,7 @@ exiv2 -pp /path/to/your/file.RAW
 #### Tested Formats
 
 Working
-- .ORF, .ARW, .NEF, .RAF, .CR2, .CR3, DNG
+- .ORF, .ARW, .NEF, .RAF, .CR2, .CR3, DNG, .RW2
 
 WIP
-- RW2
+- 
