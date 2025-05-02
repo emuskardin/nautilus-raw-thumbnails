@@ -5,6 +5,17 @@ OUTPUT_FILE="$2"
 INPUT_FILE=$(realpath "$INPUT_FILE")
 OUTPUT_FILE=$(realpath "$OUTPUT_FILE")
 
+if [ "$(which "magick")" != "" ]; 
+then
+    CONVERT_FUNCTION=magick
+elif [ "$(which "convert")" != "" ]; 
+then
+    CONVERT_FUNCTION=convert
+else
+    # echo "No image converting function found, please install 'imagemagick'."
+    exit 1
+fi
+
 # Extract the embedded thumbnail using exiv2
 exiv2 -ep1 -l . "$INPUT_FILE"
 
@@ -31,14 +42,14 @@ if [ -f "$THUMBNAIL_FILE" ]; then
     if [ -n "$ORIENTATION" ] && [ "$ORIENTATION" -ne 1 ]; then
         # echo "Rotating image (orientation: $ORIENTATION)"
         case "$ORIENTATION" in
-            2) magick "$THUMBNAIL_FILE" -flop "$OUTPUT_FILE" ;;
-            3) magick "$THUMBNAIL_FILE" -rotate 180 "$OUTPUT_FILE" ;;
-            4) magick "$THUMBNAIL_FILE" -flip "$OUTPUT_FILE" ;;
-            5) magick "$THUMBNAIL_FILE" -transpose "$OUTPUT_FILE" ;;
-            6) magick "$THUMBNAIL_FILE" -rotate 90 "$OUTPUT_FILE" ;;
-            7) magick "$THUMBNAIL_FILE" -transverse "$OUTPUT_FILE" ;;
-            8) magick "$THUMBNAIL_FILE" -rotate 270 "$OUTPUT_FILE" ;;
-            *) magick "$THUMBNAIL_FILE" "$OUTPUT_FILE" ;;
+            2) $CONVERT_FUNCTION "$THUMBNAIL_FILE" -flop "$OUTPUT_FILE" ;;
+            3) $CONVERT_FUNCTION "$THUMBNAIL_FILE" -rotate 180 "$OUTPUT_FILE" ;;
+            4) $CONVERT_FUNCTION "$THUMBNAIL_FILE" -flip "$OUTPUT_FILE" ;;
+            5) $CONVERT_FUNCTION "$THUMBNAIL_FILE" -transpose "$OUTPUT_FILE" ;;
+            6) $CONVERT_FUNCTION "$THUMBNAIL_FILE" -rotate 90 "$OUTPUT_FILE" ;;
+            7) $CONVERT_FUNCTION "$THUMBNAIL_FILE" -transverse "$OUTPUT_FILE" ;;
+            8) $CONVERT_FUNCTION "$THUMBNAIL_FILE" -rotate 270 "$OUTPUT_FILE" ;;
+            *) $CONVERT_FUNCTION "$THUMBNAIL_FILE" "$OUTPUT_FILE" ;;
         esac
     else
         # No orientation or normal orientation
