@@ -1,18 +1,16 @@
 #!/bin/bash
+
 INPUT_FILE="$1"
 OUTPUT_FILE="$2"
-
 INPUT_FILE=$(realpath "$INPUT_FILE")
 OUTPUT_FILE=$(realpath "$OUTPUT_FILE")
 
-if [ "$(which "magick")" != "" ]; 
-then
+# Check for ImageMagick
+if [ "$(which "magick")" != "" ]; then
     CONVERT_FUNCTION=magick
-elif [ "$(which "convert")" != "" ]; 
-then
+elif [ "$(which "convert")" != "" ]; then
     CONVERT_FUNCTION=convert
 else
-    # echo "No image converting function found, please install 'imagemagick'."
     exit 1
 fi
 
@@ -22,15 +20,16 @@ exiv2 -ep1 -l . "$INPUT_FILE"
 # Derive the base name of the input file (without extension)
 BASENAME=$(basename "$INPUT_FILE" | sed 's/\(.*\)\..*/\1/')
 
-# Look for any preview file regardless of extension
-THUMBNAIL_FILE=$(find . -name "${BASENAME}-preview1.*" | head -n 1)
+# Use shell globbing instead of find (enable nullglob temporarily)
+shopt -s nullglob
+PREVIEW_FILES=( "${BASENAME}-preview1."* )
+shopt -u nullglob
 
-# Absolute path of the expected preview file
-THUMBNAIL_FILE="$(pwd)/${THUMBNAIL_FILE}"
-
-# Debugging: Check if the thumbnail file exists
-# echo "Checking if thumbnail file exists: $THUMBNAIL_FILE"
-# ls -l "$THUMBNAIL_FILE"
+# Check if we found any preview files
+if [ ${#PREVIEW_FILES[@]} -eq 0 ]; then
+    exit 1
+fi
+THUMBNAIL_FILE="${PREVIEW_FILES[0]}"
 
 # If a preview file exists, convert it to the output location
 if [ -f "$THUMBNAIL_FILE" ]; then
