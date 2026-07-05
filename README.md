@@ -3,7 +3,7 @@
 A lightweight and fast thumbnailer for Nautilus that generates thumbnails for RAW image files using embedded previews extracted with exiv2.
 This thumbnailer should work with most RAW formats that have embedded previews.
 
-Tested on Ubuntu 24.04 with Nautilus (GNOME Files). Should work also with  Nemo and Caja.
+Tested on Ubuntu 24.04, Ubuntu 26.04, and Fedora with Nautilus. Should work also with  Nemo and Caja.
 
 <picture style="align: center; padding-bottom: 3mm;">
   <img alt="" src="./photo_preview/thumbnail_preview.png">
