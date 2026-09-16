@@ -2,6 +2,10 @@
 
 INPUT_FILE="$1"
 OUTPUT_FILE="$2"
+# Optional: max width/height in pixels. If set, the output is downscaled to
+# fit within this box (never upscaled). Leave empty/unset for full-res output
+# (e.g. when called from the Sushi plugin in sushi/raw.js).
+MAX_SIZE="$3"
 INPUT_FILE=$(realpath "$INPUT_FILE")
 OUTPUT_FILE=$(realpath "$OUTPUT_FILE")
 
@@ -13,6 +17,14 @@ elif [ "$(which "convert")" != "" ]; then
 else
     exit 1
 fi
+
+# exiv2 -l writes the extracted preview relative to the current directory,
+# which may be unwritable (e.g. a read-only network share, or an arbitrary
+# cwd inherited from the caller). Always extract into our own private tmp
+# dir instead of relying on the caller's cwd.
+WORKDIR=$(mktemp -d)
+trap 'rm -rf "$WORKDIR"' EXIT
+cd "$WORKDIR" || exit 1
 
 # Extract the embedded thumbnail using exiv2
 exiv2 -ep1 -l . "$INPUT_FILE"
@@ -52,10 +64,17 @@ if [ -f "$THUMBNAIL_FILE" ]; then
         esac
     else
         # No orientation or normal orientation
-        convert "$THUMBNAIL_FILE" "$OUTPUT_FILE"
+        $CONVERT_FUNCTION "$THUMBNAIL_FILE" "$OUTPUT_FILE"
     fi
     # Clean up the temporary JPG file
     rm "$THUMBNAIL_FILE"
+
+    # Downscale in place if a max size was requested (thumbnail-cache path).
+    # ">" means only shrink if larger, never upscale.
+    if [ -n "$MAX_SIZE" ]; then
+        $CONVERT_FUNCTION "$OUTPUT_FILE" -resize "${MAX_SIZE}x${MAX_SIZE}>" "$OUTPUT_FILE"
+    fi
+
     exit 0
 else
     # echo "No embedded thumbnail found for $INPUT_FILE" >&2

@@ -3,6 +3,13 @@
 A lightweight and fast thumbnailer for Nautilus that generates thumbnails for RAW image files using embedded previews extracted with exiv2.
 This thumbnailer should work with most RAW formats that have embedded previews.
 
+The script now also downscales the thumbnail to the size requested by the thumbnail
+cache (via the standard freedesktop.org `%s` placeholder) instead of writing the
+full-resolution embedded preview straight into `~/.cache/thumbnails` — see
+[Installation](#installation). There's also an optional [Sushi (Quick Look)
+plugin](#sushi-quick-look-full-preview) so pressing Space on a RAW file shows an
+actual full-resolution preview.
+
 Tested on Ubuntu 24.04, Ubuntu 26.04, and Fedora with Nautilus. Should work also with  Nemo and Caja.
 
 <picture style="align: center; padding-bottom: 3mm;">
@@ -35,6 +42,35 @@ nautilus -q
 # Optional (force thumbnail generation)
 rm -rf ~/.cache/thumbnails/*
 ```
+
+## Sushi (Quick Look) full preview
+
+Pressing Space on a file in Nautilus normally opens [GNOME
+Sushi](https://gitlab.gnome.org/GNOME/sushi) for a quick full-size preview. Sushi's
+own image viewer relies on gdk-pixbuf, which has no RAW support, so without this
+plugin RAW files just show a generic icon there (the grid thumbnailer above only
+covers the grid view, not Sushi).
+
+`sushi/raw.js` is a Sushi plugin that reuses `exiv2-thumbnailer.sh` (called without
+the size argument, so it gets the full-resolution preview) to show a real preview
+when you hit Space on a RAW file.
+
+```bash
+mkdir -p ~/.local/share/sushi/viewers
+cp sushi/raw.js ~/.local/share/sushi/viewers/
+```
+
+No restart needed, Sushi is D-Bus-activated and picks it up on next launch.
+
+**Compatibility:** only tested against **gnome-sushi 50.x**, which uses the legacy
+GTK3/GJS `imports`-based plugin system (`~/.local/share/sushi/viewers/*.js`). Newer
+Sushi versions (≥51) are being rewritten to GTK4/Adwaita/Glycin with a different
+plugin API (`~/.local/share/sushi/plugins-1/`) — `sushi/raw.js` won't load there as-is
+and would need porting. Check your version with `dpkg -l gnome-sushi` /
+`gnome-sushi --version` first.
+
+`sushi/raw.js` is derived from Sushi's own source and is licensed
+GPL-2.0-or-later (see `sushi/LICENSE`), unlike the rest of this repo (MIT).
 
 ## Troubleshooting
 
