@@ -59,10 +59,34 @@ G_MESSAGES_DEBUG=all NAUTILUS_DEBUG=Window nautilus
 ```bash
 /usr/local/bin/exiv2-thumbnailer.sh /path/to/your/file.RAW /tmp/test-thumbnail.png
 ```
+Note that this runs the script outside of Nautilus' sandbox, so it working here does not guarantee it works in Nautilus (see below).
 
 4. Verify that your RAW files have embedded previews:
 ```bash
 exiv2 -pp /path/to/your/file.RAW
+```
+
+### Thumbnails work when running the script manually, but not in Nautilus
+
+Nautilus runs thumbnailers in a sandbox (bubblewrap + seccomp) that only allows
+64-bit programs. If ImageMagick, exiv2 or exiftool is a 32-bit build (this can
+happen when 32-bit packages are enabled, e.g. for Steam or Wine), the thumbnailer
+fails silently.
+
+Check:
+```bash
+file -L $(which magick) $(which exiv2)   # should say x86-64
+```
+
+Fix (Debian/Ubuntu):
+```bash
+sudo apt install imagemagick-7.q16:amd64
+```
+
+Then clear the failed-thumbnail cache, or Nautilus won't retry:
+```bash
+rm -rf ~/.cache/thumbnails/fail
+nautilus -q
 ```
 
 #### Tested Formats

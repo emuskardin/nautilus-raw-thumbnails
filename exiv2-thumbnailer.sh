@@ -52,7 +52,7 @@ if [ -f "$THUMBNAIL_FILE" ]; then
         esac
     else
         # No orientation or normal orientation
-        convert "$THUMBNAIL_FILE" "$OUTPUT_FILE"
+        $CONVERT_FUNCTION "$THUMBNAIL_FILE" "$OUTPUT_FILE"
     fi
     # Clean up the temporary JPG file
     rm "$THUMBNAIL_FILE"
